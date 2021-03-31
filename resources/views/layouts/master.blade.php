@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
     
-    <link rel="stylesheet" href="{{asset('css/app.css')}}" >
+    <link rel="stylesheet" href="{{asset('css/app2.css')}}" >
     <link rel="stylesheet" href="{{asset("css/style.css")}}" >
 
 
@@ -35,11 +35,21 @@
                         </li>
                        
                         <li class="nav-item dropdown">
+                            @guest
                             <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connexion</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownId">
-                                <a class="dropdown-item" href="#">Action 1</a>
-                                <a class="dropdown-item" href="#">Action 2</a>
+                                <a class="dropdown-item" href={{route('login')}}>Login</a>
+                                <a class="dropdown-item" href={{route('register')}}>Register</a>
                             </div>
+                            @endguest
+
+                            @auth
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connecté</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownId">
+                                <a class="dropdown-item" href={{route('logout')}}>Déconnter</a>
+                               
+                            </div>
+                            @endauth
                         </li>
                         {{-- <li class="nav-item active">
                             <a class="nav-link" href="{{$question}}">Question <span class="sr-only">(current)</span></a>
