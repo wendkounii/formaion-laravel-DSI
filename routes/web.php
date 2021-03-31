@@ -1,8 +1,12 @@
 <?php
 
+use App\Models\User;
+use App\Models\Produit;
+use App\Mail\NouveauProduitAjouter;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProduitController;
-use Illuminate\Support\Facades\Route;
+use App\Notifications\nouveauProduitNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +37,16 @@ Route::get('produit/modifier/{produit}',  [ProduitController::class, 'edit'])->n
 Route::put('produit/update/{id}',         [MainController::class, 'updateProduit'])->name('update.produit');
 Route::resource('produits',               ProduitController::class);
 Route::get('export-excel',                [MainController::class, 'excelExport'])->name('excel.export');
+Route::get('send-mail',                   [MainController::class, 'sendMail'])->name('send.mail');
+Route::get('test-mail', function (){
+    //dd('ok');
+   // $user = User::first();
+    $produit = Produit::first();
+   return new NouveauProduitAjouter($produit);
+});
+Route::get('test-notification', function(){
+     $user =  User::first();
+     $produit = Produit::first();
+     $user->notify(new nouveauProduitNotification($produit));
+
+});

@@ -8,8 +8,12 @@ use App\Models\Commande;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Exports\ProduitsExport;
+use App\Mail\NouveauProduitAjouter;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Requests\ProduitValidationRequest;
+use App\Notifications\nouveauProduitNotification;
 
 class MainController extends Controller
 {
@@ -51,7 +55,7 @@ class MainController extends Controller
     //fonction pour créer un nouveau produit 2em approche
   public function ajoutProduitEncore()
   {
-      Produit::create(
+     $produit = Produit::create(
           [
               'uuid'        => Str::uuid(),
               'designation' => 'Mangue',
@@ -63,6 +67,10 @@ class MainController extends Controller
 
           ]
           );
+          
+          $user = User::first();
+          Mail::to($user)->send(new NouveauProduitAjouter($produit));
+
   }
 
 
@@ -189,6 +197,17 @@ class MainController extends Controller
       "pays_source"     =>$request->pays_source,
       "poids"           => $request->poids
     ]);
+
+    // $user = User::first();
+    // Mail::to($user)->send(new NouveauProduitAjouter($produit));
+
+    $user =  User::first();
+   
+
+    $user->notify(new nouveauProduitNotification($produit));
+    //$users = User::all();
+    //$produits = Produit::first();
+    //Notification::send($users, new nouveauProduitNotification($produits));
     return redirect()->back()->with('enregistrerproduit','enregistrer avec succès'); 
   }
 
@@ -227,5 +246,13 @@ class MainController extends Controller
     //dd('ok');
     return Excel::download(new ProduitsExport, "Produits.xls");
   }
+
+ /* public function sendMail(){
+    //dd('ok');
+    $user = User::first();
+    Mail::to($user)->send(new NouveauProduitAjouter());
+    dd('le mail a bien été cenvoyé');
+  // return new NouveauProduitAjouter();
+}*/
 }
  
