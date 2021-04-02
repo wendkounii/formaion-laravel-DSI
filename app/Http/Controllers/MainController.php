@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Exports\ProduitsExport;
 use App\Mail\NouveauProduitAjouter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Notification;
@@ -20,7 +21,8 @@ class MainController extends Controller
     //
     public function afficheAccueil()
     {
-        return view('pages.front-office.welcome', 
+     // dd(Auth::user()->role->role);  
+      return view('pages.front-office.welcome', 
         [ 'nomSite'        => 'Services en ligne', 
           'nomMinistere'   => 'Ministere de l\'Economie des Postes et la Transformation Digitale'
         ]);
@@ -172,7 +174,11 @@ class MainController extends Controller
 
   public function ajouterProduit()
   {
-    return view("pages.front-office.ajouter-produit");
+    $produit = new Produit;
+   // dd($produit);
+    return view("pages.front-office.ajouter-produit", [
+      'produit' => $produit,
+      ]);
   }
 
   public function enregistrerProduit(ProduitValidationRequest $request)
@@ -187,7 +193,14 @@ class MainController extends Controller
        "pays_source"     => "required|min:3|max:255",
        "poids"           => "required|digits_between:2,5"
    ]);*/
+  $imageName = "default-image.png";
+  if($request->file("image")){
+   $imageName = time()."_".$request->file("image")->getClientOriginalName();
+   // dd($imageName);
+    $request->file("image")->storeAs("public/produits-images", $imageName);
 
+      // $imageName = time."_".$request->file("image")->getClientOriginalExtension()
+    }
     $produit = Produit::create([
       "uuid"            => str::uuid(),
       "designation"     => $request->designation,
@@ -195,7 +208,8 @@ class MainController extends Controller
       "prix"            => $request->prix,
       "like"            => $request->like,
       "pays_source"     =>$request->pays_source,
-      "poids"           => $request->poids
+      "poids"           => $request->poids,
+      "image"           =>$imageName, 
     ]);
 
     // $user = User::first();
@@ -218,7 +232,7 @@ class MainController extends Controller
   {
     
     //$produit = Produit::find($id); ***** 1er manière ****
-    dd($produit);
+   // dd($produit);
     return view("pages.front-office.modifier-produit", [
 
       'produit' => $produit,

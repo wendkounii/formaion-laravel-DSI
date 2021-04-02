@@ -30,8 +30,8 @@ class ProduitValidationRequest extends FormRequest
                 "prix"            => "required|numeric",
                 "like"            => "required|numeric",
                 "pays_source"     => "required|min:3|max:255",
-                "poids"           => "required|numeric"
-            
+                "poids"           => "required|numeric",
+                "image"           => "file|mimes:png,jpg,jpeg|nullable"
         ];
     }
 }

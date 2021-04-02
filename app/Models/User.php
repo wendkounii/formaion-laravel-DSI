@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'password',
+        'role_id'
     ];
 
     /**
@@ -58,4 +59,20 @@ class User extends Authenticatable
     {
         return $this->phone_number;
     }
+
+    
+       public function role()
+       {
+           return $this->belongsTo(Role::class);
+       }
+
+       public function isAdmin()
+       {
+          if ($this->role->role=='admin' OR $this->role->role=='super-admin') 
+             return true;
+          else 
+             return false;   
+       }
+
+  
 }

@@ -18,12 +18,13 @@
       <header>
           <nav class="navbar navbar-expand-sm navbar-dark bg-success">
 
-             <div class="container">
-                <a class="navbar-brand" href="{{route('accueil')}}">Formation DSI</a>
+             
+                <a class="navbar-brand ml-5" href="{{route('accueil')}}">Formation DSI</a>
                 <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                     aria-expanded="false" aria-label="Toggle navigation"></button>
-                <div class="collapse navbar-collapse" id="collapsibleNavId">
+                <div class="collapse navbar-collapse d-flex justify-content-between" id="collapsibleNavId">
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        
                         <li class="nav-item active">
                             <a class="nav-link" href="{{route('accueil')}}">Accueil <span class="sr-only">(current)</span></a>
                         </li>
@@ -34,9 +35,17 @@
                             <a class="nav-link" href="{{route('produits.liste')}}">Liste de produits </a>
                         </li>
                        
+                       
+                        {{-- <li class="nav-item active">
+                            <a class="nav-link" href="{{$question}}">Question <span class="sr-only">(current)</span></a>
+                        </li> --}}
+                    </ul>
+
+                    <ul class="navbar-nav mr-5 mt-2 mt-lg-0">
+                                               
                         <li class="nav-item dropdown">
                             @guest
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connexion</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-align: right">Connexion</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownId">
                                 <a class="dropdown-item" href={{route('login')}}>Login</a>
                                 <a class="dropdown-item" href={{route('register')}}>Register</a>
@@ -44,9 +53,16 @@
                             @endguest
 
                             @auth
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connecté</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{Auth::user()->name}}</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownId">
-                                <a class="dropdown-item" href={{route('logout')}}>Déconnter</a>
+                                <a  class="dropdown-item" href={{route('logout')}}   onclick="
+                                    event.preventDefault();
+                                    document.getElementById('deconnexion').submit();
+                                ">Déconnter</a>
+                               
+                                <form id="deconnexion" action="{{route('logout')}}" method="post">
+                                   @csrf
+                                </form>
                                
                             </div>
                             @endauth
@@ -57,7 +73,7 @@
                     </ul>
                    
                 </div>
-             </div>
+             
           </nav>
       </header>
       <main>
